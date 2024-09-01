@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            margin-top: 0;
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .items-table {
+            table-layout: fixed;
+        }
+        .items-table th, .items-table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .items-table th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Search Order by UID</h1>
+    <form method="GET" action="/search">
+        <input type="text" name="order_uid" placeholder="Enter Order UID" value="{{.OrderUID}}" required>
+        <input type="submit" value="Search">
+    </form>
+
+    {{if .Order}}
+    <div class="section">
+        <h2>Order Details</h2>
+        <table>
+            <tr><th>Order UID</th><td>{{.Order.OrderUID}}</td></tr>
+            <tr><th>Track Number</th><td>{{.Order.TrackNumber}}</td></tr>
+            <tr><th>Entry</th><td>{{.Order.Entry}}</td></tr>
+            <tr><th>Locale</th><td>{{.Order.Locale}}</td></tr>
+            <tr><th>Internal Signature</th><td>{{.Order.InternalSignature}}</td></tr>
+            <tr><th>Customer ID</th><td>{{.Order.CustomerID}}</td></tr>
+            <tr><th>Delivery Service</th><td>{{.Order.DeliveryService}}</td></tr>
+            <tr><th>Shardkey</th><td>{{.Order.Shardkey}}</td></tr>
+            <tr><th>SM ID</th><td>{{.Order.SmID}}</td></tr>
+            <tr><th>Date Created</th><td>{{.Order.DateCreated}}</td></tr>
+            <tr><th>OOF Shard</th><td>{{.Order.OofShard}}</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Delivery Information</h2>
+        <table>
+            <tr><th>Name</th><td>{{.Order.Delivery.Name}}</td></tr>
+            <tr><th>Phone</th><td>{{.Order.Delivery.Phone}}</td></tr>
+            <tr><th>Zip</th><td>{{.Order.Delivery.Zip}}</td></tr>
+            <tr><th>City</th><td>{{.Order.Delivery.City}}</td></tr>
+            <tr><th>Address</th><td>{{.Order.Delivery.Address}}</td></tr>
+            <tr><th>Region</th><td>{{.Order.Delivery.Region}}</td></tr>
+            <tr><th>Email</th><td>{{.Order.Delivery.Email}}</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Payment Information</h2>
+        <table>
+            <tr><th>Transaction</th><td>{{.Order.Payment.Transaction}}</td></tr>
+            <tr><th>Request ID</th><td>{{.Order.Payment.RequestID}}</td></tr>
+            <tr><th>Currency</th><td>{{.Order.Payment.Currency}}</td></tr>
+            <tr><th>Provider</th><td>{{.Order.Payment.Provider}}</td></tr>
+            <tr><th>Amount</th><td>{{.Order.Payment.Amount}}</td></tr>
+            <tr><th>Payment Date</th><td>{{.Order.Payment.PaymentDT}}</td></tr>
+            <tr><th>Bank</th><td>{{.Order.Payment.Bank}}</td></tr>
+            <tr><th>Delivery Cost</th><td>{{.Order.Payment.DeliveryCost}}</td></tr>
+            <tr><th>Goods Total</th><td>{{.Order.Payment.GoodsTotal}}</td></tr>
+            <tr><th>Custom Fee</th><td>{{.Order.Payment.CustomFee}}</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Items</h2>
+        <table class="items-table">
+            <tr>
+                <th>Name</th><th>Price</th><th>Brand</th><th>Status</th>
+                <th>Track Number</th><th>CHRT ID</th><th>RID</th><th>Sale</th>
+                <th>Size</th><th>Total Price</th><th>NM ID</th>
+            </tr>
+            {{range .Order.Items}}
+            <tr>
+                <td>{{.Name}}</td>
+                <td>{{.Price}}</td>
+                <td>{{.Brand}}</td>
+                <td>{{.Status}}</td>
+                <td>{{.TrackNumber}}</td>
+                <td>{{.ChrtID}}</td>
+                <td>{{.Rid}}</td>
+                <td>{{.Sale}}</td>
+                <td>{{.Size}}</td>
+                <td>{{.TotalPrice}}</td>
+                <td>{{.NmID}}</td>
+            </tr>
+            {{end}}
+        </table>
+    </div>
+    {{else if .OrderUID}}
+    <p>No order found for UID "{{.OrderUID}}". Please try again.</p>
+    {{end}}
+</div>
+</body>
+</html>
